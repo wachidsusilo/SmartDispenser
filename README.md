@@ -21,6 +21,7 @@ Download all files below and install them on your windows machine. You may want 
 2. Download [MongoDB](https://www.mongodb.com/try/download/community)
 3. Download [MongoDB Compass](https://www.mongodb.com/try/download/compass)
 4. Download [MongoDB Shell](https://www.mongodb.com/try/download/shell)
+5. Download [Zadig](https://zadig.akeo.ie/)
 
 After software installation complete, you may need to add the paths below into your `system path`. To do so, open __Windows Search__ and type `Environment` in the search field. Choose __Edit the system Environment Variables__ from the search result. The _System Properties_ window will appear, click _Environment Variables_ in the bottom right corner of the window. Inside _Environtment Variables_ window, select variable `Path` and click _Edit_. When the _Edit environtment variables_ window appears, click _new_ to add the following path:
 
@@ -28,7 +29,13 @@ After software installation complete, you may need to add the paths below into y
 2. `C:\Users\{USERNAME}\AppData\Local\Programs\mongosh\`
 3. `C:\Program Files\MongoDB\Server\5.0\bin\`
 
-You may need to restart your machine before your terminal recognize the new _system path_.
+You may need to restart your machine before your terminal recognize the new _system path_. The next step is to install _LIBUSB_ driver using _Zadig_. You need to be careful here as **installing driver into the wrong device may result an unexpected result**. You should make sure that you are selecting the _RFID Reader_ and not another device.
+1. Open `Zadig` as an Administrator.
+2. Go to `Options`, check `List All Devices`.
+3. Select your _RFID Reader_. The device may be listed as `USB Standard Keyboard (Interface 0)`. You need to make it sure by looking into the _USB ID_ (it's the same as _ProductID_), in my case the _USB ID_ was `FFFF 0035 00` (the _ProductID_ is `35`). You should check yours from the _Device Properties_.
+4. On the _Driver_ section, select `WinUSB (v6.X.XXXX.XXXXX)`.
+5. When you are sure that this is the device, the last step is to _click_ `Replace Driver`.
+6. After the driver is successfully installed, yo can't use the device as you regularly did. This is important for the sake of the server to be able to access the device. Otherwise, the server will tell you that the device is not supported by the _Operating System_.
 
 #### 2. Database
 To setup MongoDB Security, you need to open _Windows PowerShell_ and run the following command.
@@ -70,16 +77,34 @@ You can also restart the service using terminal by running the following command
 #### 3. Server
 The insctructions below will guide you to install the NodeJS application as a windows service. The service will run as daemon and will automatically restart it self when the application crashed. The service will automatically started after system boot, so you don't need to start it manually.
 1. Copy everything inside `Production` folder into `C:\Smart Dispenser\`.
-2. Open _Windows PowerShell_ as Administrator.
+2. Go to the project directory (using _File Explorer_) and open file `.env` using text editor.
+3. Modify the `PORT`, `USB_VENDOR_ID`, and `USB_PRODUCT_ID` value according to your need. The `USB_XXX` is the device descriptor of the _RFID Reader_. You can find the _VendorID_ and _ProductID_ in the device properties.
+4. Open _Windows PowerShell_ as Administrator.
+5. Go to project directory.
+   - command: `cd "C:\Smart Dispenser"`
+6. Install all dependencies.
+   - command: `npm install --only=prod`
+7. Run application for the first time.
+   - command: `node index.js`
+8. Stop the NodeJS application by pressing `CTRL + C`. If this is not working, you can close _Windows PowerShell_ and open it again.
+9. Start the Application Service.
+   - command: `net start smartdispenser`.
+
+**Important!**
+The `PORT`, `USB_VENDOR_ID`, `USB_PRODUCT_ID` and all of it's kind inside `.env` file are treated as _Environtment Variable_. These variables are created only the _first time when the service created_. Whenever you are modifying these variables, you need to reinstall the service. To do so, follow the steps below.
+1. Open _Windows PowerShell_ as Administrator.
+2. Stop current service.
+   - command: `net stop smartdispenser.exe`
 3. Go to project directory.
    - command: `cd "C:\Smart Dispenser"`
-4. Install all dependencies.
-   - command: `npm install --only=prod`
-5. Run application for the first time.
+4. Uninstall the service.
+   - command: `npm run uninstall`
+5. Make sure that the `daemon` folder inside the project directory has been deleted. If not, you can run `npm run uninstall` once again or just deleting it manually.
+6. After the service has been successfully uninstalled, you can install it again.
    - command: `node index.js`
-6. Stop the NodeJS application by pressing `CTRL + C`. If this is not working, you can close _Windows PowerShell_ and open it again.
-7. Start the Application Service.
-   - command: `net start smartdispenser`.
+7. Stop the server by pressing `CTRL + C` or just closing the _Windows PowerShell_ and open a new one.
+8. Start the service.
+   - command: `net start smartdispenser.exe`
 
 #### 4. **Microcontroller**
 The following instructions will guide you to setup the ESP32 microcontroller using Arduino IDE.

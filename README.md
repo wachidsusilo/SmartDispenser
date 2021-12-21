@@ -56,7 +56,7 @@ To setup MongoDB Security, you need to open _Windows PowerShell_ and run the fol
 8. Exit MongoDB Shell.
    - command: `exit`
 
-After the shell command successfully executed, you need to go to `C:\Program Files\MongoDB\Server\5.0\bin` and open `mongod.cfg` file using text editor. Add the following configuration command after `#security:` line.
+After the shell command successfully executed, you need to go to `C:\Program Files\MongoDB\Server\5.0\bin` (MongoDB installation directory) and open `mongod.cfg` file using text editor. Add the following configuration command after `#security:` line.
 ````
 security:
   authorization: "enabled";

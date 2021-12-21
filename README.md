@@ -76,7 +76,18 @@ You can also restart the service using terminal by running the following command
 
 #### 3. Server
 The insctructions below will guide you to install the NodeJS application as a windows service. The service will run as daemon and will automatically restart it self when the application crashed. The service will automatically started after system boot, so you don't need to start it manually.
-1. Copy everything inside `Production` folder into `C:\Smart Dispenser\`.
+1. Download `Smart Dispenser v2.0-Alpha1.zip` from the `Production` folder in _Google Drive_.
+2. _Copy_ the file to `C:\` drive, and then extract it. The project structure should looks like this:
+````
+C:\
+  | Smart Dispenser
+      | build
+      | database
+      | oauth
+      | routes
+      | utilities
+  ....
+````
 2. Go to the project directory (using _File Explorer_) and open file `.env` using text editor.
 3. Modify the `PORT`, `USB_VENDOR_ID`, and `USB_PRODUCT_ID` value according to your need. The `USB_XXX` is the device descriptor of the _RFID Reader_. You can find the _VendorID_ and _ProductID_ in the device properties.
 4. Open _Windows PowerShell_ as Administrator.

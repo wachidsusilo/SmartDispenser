@@ -59,7 +59,7 @@ To setup MongoDB Security, you need to open _Windows PowerShell_ and run the fol
 After the shell command successfully executed, you need to go to `C:\Program Files\MongoDB\Server\5.0\bin` (MongoDB installation directory) and open `mongod.cfg` file using text editor. Add the following configuration command after `#security:` line.
 ````
 security:
-  authorization: "enabled";
+  authorization: enabled
 ````
 You may need to restart MongoDB Service to enable authorization feature. To do so, open _Windows Task Manager_ by pressing `CTRL + SHIFT + ESC` and select _Services_ tab. Find process with name `MongoDB`, right click it and select _restart_.
 You can also restart the service using terminal by running the following commands.
